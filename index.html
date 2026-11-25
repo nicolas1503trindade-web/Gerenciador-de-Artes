@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biblioteca de Artes | Omar Contadores</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+<style>
+:root{--bg:#0c1018;--panel:#141b27;--panel2:#1a2433;--line:#283447;--txt:#eef3fb;--muted:#91a0b5;--blue:#6ea8fe;--green:#57d6a0;--red:#ff7b86}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#17263b 0,transparent 35%),var(--bg);color:var(--txt);font:15px Inter,system-ui,Segoe UI,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;background:var(--blue);color:#08111f;font-weight:700}button.secondary{background:#263449;color:var(--txt);border:1px solid var(--line)}button.danger{background:#48242d;color:#ffdce0}button:disabled{opacity:.5;cursor:not-allowed}
+.wrap{max-width:1400px;margin:auto;padding:28px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.brand{display:flex;gap:13px;align-items:center}.logo{width:45px;height:45px;border-radius:13px;background:linear-gradient(135deg,#8fc1ff,#486ee8);display:grid;place-items:center;color:#071326;font-weight:900;font-size:20px}.brand h1{font-size:21px;margin:0}.brand p{margin:4px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:9px;flex-wrap:wrap}
+.layout{display:grid;grid-template-columns:230px 1fr;gap:20px}.side,.main,.stat,.modalbox{background:rgba(20,27,39,.94);border:1px solid var(--line);border-radius:17px}.side{padding:17px;height:max-content}.side h3{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:7px 9px 12px}.nav{display:flex;flex-direction:column;gap:5px}.nav button{background:transparent;color:var(--muted);text-align:left;font-weight:600}.nav button.active,.nav button:hover{background:var(--panel2);color:var(--txt)}.hint{font-size:12px;color:var(--muted);line-height:1.5;margin:18px 8px 5px}
+.main{padding:22px;min-width:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{padding:15px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:7px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 18px}.toolbar input{flex:1;min-width:190px}.field{background:#0e1520;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none}.field:focus{border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}.art{background:#111925;border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}.thumb{height:170px;background:#202c3d;display:grid;place-items:center;overflow:hidden;color:var(--muted)}.thumb img{width:100%;height:100%;object-fit:cover}.fileicon{font-size:42px}.artbody{padding:13px}.arttitle{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:12px;color:var(--muted);margin-top:6px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.tag{font-size:11px;padding:4px 8px;border-radius:20px;background:#24364c;color:#c7ddff}.status{background:#203c36;color:#9ce8ca}.cardactions{display:flex;gap:7px;margin-top:12px}.cardactions button{font-size:12px;padding:8px 10px;flex:1}
+.empty{padding:55px 15px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.empty b{display:block;color:var(--txt);font-size:17px;margin-bottom:6px}
+.login{max-width:420px;margin:9vh auto;padding:28px;background:var(--panel);border:1px solid var(--line);border-radius:18px}.login h2{margin-top:0}.login p{color:var(--muted);line-height:1.5}.login input{width:100%;margin:7px 0}.login button{width:100%;margin-top:9px}
+.modal{position:fixed;inset:0;background:#05080dcc;display:none;align-items:center;justify-content:center;padding:16px;z-index:5}.modal.show{display:flex}.modalbox{width:min(620px,100%);padding:22px;max-height:92vh;overflow:auto}.modalhead{display:flex;justify-content:space-between;align-items:center}.modalhead h2{margin:0 0 15px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.formgrid label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}.formgrid input,.formgrid select,.formgrid textarea{width:100%}.wide{grid-column:1/-1}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.notice{padding:11px 13px;border-radius:10px;background:#182a3d;color:#bcd9ff;margin-bottom:14px;font-size:13px}.hidden{display:none!important}
+@media(max-width:800px){.wrap{padding:15px}.layout{grid-template-columns:1fr}.side{padding:10px}.nav{flex-direction:row;overflow:auto}.nav button{white-space:nowrap}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;flex-direction:column}.main{padding:14px}}
+@media(max-width:480px){.formgrid{grid-template-columns:1fr}.wide{grid-column:auto}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{height:125px}.cardactions{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+ <div class="brand"><div class="logo">A</div><div><h1>Biblioteca de Artes</h1><p>Omar Contadores · acesso da equipe</p></div></div>
+ <h2 style="margin-top:28px">Entrar na sua conta</h2><p>Use o mesmo usuário e senha cadastrados no projeto Supabase do Postflow.</p>
+ <input id="email" class="field" type="email" placeholder="E-mail">
+ <input id="password" class="field" type="password" placeholder="Senha">
+ <button id="loginBtn">Entrar</button><div id="loginMsg" class="meta" style="margin-top:12px"></div>
+</div>
+<div id="app" class="wrap hidden">
+ <header class="top"><div class="brand"><div class="logo">A</div><div><h1>Biblioteca de Artes</h1><p>Omar Contadores · central de arquivos criativos</p></div></div>
+ <div class="actions"><button id="newBtn">＋ Adicionar arte</button><button class="secondary" id="logoutBtn">Sair</button></div></header>
+ <div class="stats">
+  <div class="stat"><small>Total de artes</small><strong id="total">0</strong></div><div class="stat"><small>Em criação</small><strong id="creating">0</strong></div><div class="stat"><small>Em revisão</small><strong id="review">0</strong></div><div class="stat"><small>Aprovadas</small><strong id="approved">0</strong></div>
+ </div>
+ <div class="layout">
+  <aside class="side"><h3>Biblioteca</h3><div class="nav" id="categoryNav">
+   <button class="active" data-cat="Todas">▦ Todas as artes</button><button data-cat="Posts">▣ Posts</button><button data-cat="Stories">▣ Stories</button><button data-cat="Carrosséis">▤ Carrosséis</button><button data-cat="Campanhas">◈ Campanhas</button><button data-cat="Eventos">✦ Eventos</button><button data-cat="Outros">＋ Outros</button>
+  </div><div class="hint">Os arquivos ficam no armazenamento em nuvem do Supabase e os dados são compartilhados com a equipe autenticada.</div></aside>
+  <main class="main"><div class="toolbar"><input id="search" class="field" placeholder="Buscar por nome, campanha ou descrição…"><select id="statusFilter" class="field"><option value="">Todos os status</option><option>Em criação</option><option>Em revisão</option><option>Aprovada</option><option>Publicada</option><option>Arquivada</option></select><select id="sort" class="field"><option value="new">Mais recentes</option><option value="old">Mais antigas</option><option value="name">Nome A–Z</option></select></div>
+  <div id="notice" class="notice hidden"></div><div id="gallery" class="grid"></div><div id="empty" class="empty hidden"><b>Nenhuma arte encontrada</b>Adicione a primeira arte ou altere os filtros.</div>
+ </main></div>
+</div>
+<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Adicionar arte</h2><button class="secondary" id="closeModal">✕</button></div>
+ <form id="artForm"><input type="hidden" id="artId"><div class="formgrid">
+  <div class="wide"><label>Arquivo da arte *</label><input class="field" id="file" type="file" accept="image/*,.pdf,.ai,.psd,.svg,.mp4" required></div>
+  <div class="wide"><label>Nome da arte *</label><input class="field" id="title" required placeholder="Ex.: Post — Dia do Contador"></div>
+  <div><label>Categoria</label><select class="field" id="category"><option>Posts</option><option>Stories</option><option>Carrosséis</option><option>Campanhas</option><option>Eventos</option><option>Outros</option></select></div>
+  <div><label>Status</label><select class="field" id="status"><option>Em criação</option><option>Em revisão</option><option>Aprovada</option><option>Publicada</option><option>Arquivada</option></select></div>
+  <div><label>Formato</label><select class="field" id="format"><option>1080 × 1080</option><option>1080 × 1920</option><option>1920 × 1080</option><option>A4</option><option>Outro</option></select></div>
+  <div><label>Campanha / projeto</label><input class="field" id="campaign" placeholder="Ex.: Natal 2026"></div>
+  <div><label>Responsável</label><input class="field" id="owner" placeholder="Nome do responsável"></div>
+  <div><label>Data</label><input class="field" id="artDate" type="date"></div>
+  <div class="wide"><label>Descrição / observações</label><textarea class="field" id="description" rows="3" placeholder="Anotações, alterações solicitadas…"></textarea></div>
+ </div><div class="modalfoot"><button type="button" class="secondary" id="cancel">Cancelar</button><button id="saveBtn" type="submit">Salvar arte</button></div></form>
+ </div></div>
+<script>
+(() => {
+ const $ = id => document.getElementById(id);
+ const URL = window.POSTFLOW_SUPABASE_URL, KEY = window.POSTFLOW_SUPABASE_ANON_KEY;
+ let sb, arts=[], category='Todas', editing=null;
+ const bucket='artes';
+ const say=(msg)=>{ $('notice').textContent=msg; $('notice').classList.remove('hidden'); };
+ const clearSay=()=> $('notice').classList.add('hidden');
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function showLogin(){ $('login').classList.remove('hidden'); $('app').classList.add('hidden'); }
+ function showApp(){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); }
+ async function init(){
+  if(!URL||!KEY||!window.supabase){$('loginMsg').textContent='Configuração do Supabase não encontrada. Confira supabase-config.js.';return;}
+  sb=window.supabase.createClient(URL,KEY);
+  const {data:{session}}=await sb.auth.getSession();
+  if(session){showApp();await load();}
+  sb.auth.onAuthStateChange(async(_event,session)=>{if(session){showApp();await load();}else showLogin();});
+ }
+ $('loginBtn').onclick=async()=>{ $('loginMsg').textContent='Entrando…';const {error}=await sb.auth.signInWithPassword({email:$('email').value,password:$('password').value});$('loginMsg').textContent=error?error.message:'';};
+ $('logoutBtn').onclick=()=>sb.auth.signOut();
+ async function load(){
+  clearSay();const {data,error}=await sb.from('art_assets').select('*').order('created_at',{ascending:false});
+  if(error){say('Não foi possível carregar a biblioteca: '+error.message+' — execute o arquivo schema-artes.sql no SQL Editor do Supabase.');return;}
+  arts=data||[];render();
+  sb.removeAllChannels();
+  sb.channel('artes-live').on('postgres_changes',{event:'*',schema:'public',table:'art_assets'},()=>load()).subscribe();
+ }
+ async function signed(path){const {data,error}=await sb.storage.from(bucket).createSignedUrl(path,3600);return error?'':data.signedUrl;}
+ function render(){
+  $('total').textContent=arts.length;$('creating').textContent=arts.filter(a=>a.status==='Em criação').length;$('review').textContent=arts.filter(a=>a.status==='Em revisão').length;$('approved').textContent=arts.filter(a=>a.status==='Aprovada').length;
+  let list=arts.filter(a=>(category==='Todas'||a.category===category)&&(!$('statusFilter').value||a.status===$('statusFilter').value));
+  const q=$('search').value.toLowerCase();list=list.filter(a=>(a.title+' '+a.campaign+' '+a.description).toLowerCase().includes(q));
+  if($('sort').value==='old')list.reverse();if($('sort').value==='name')list.sort((a,b)=>a.title.localeCompare(b.title,'pt-BR'));
+  $('gallery').innerHTML='';$('empty').classList.toggle('hidden',list.length>0);
+  list.forEach(async a=>{
+   const url=await signed(a.file_path);const isImg=/\.(png|jpe?g|gif|webp|svg)$/i.test(a.file_name||'');
+   const el=document.createElement('article');el.className='art';
+   el.innerHTML=`<div class="thumb">${isImg&&url?`<img src="${url}" alt="">`:`<div class="fileicon">${(a.file_name||'').toLowerCase().endsWith('.pdf')?'📄':'🎨'}</div>`}</div><div class="artbody"><div class="arttitle" title="${esc(a.title)}">${esc(a.title)}</div><div class="meta">${esc(a.category)} · ${esc(a.format||'Formato não definido')}</div><div class="tags"><span class="tag">${esc(a.status)}</span>${a.campaign?`<span class="tag">${esc(a.campaign)}</span>`:''}</div><div class="meta">${esc(a.owner||'Sem responsável')} · ${a.art_date?new Date(a.art_date+'T12:00:00').toLocaleDateString('pt-BR'):'Sem data'}</div><div class="cardactions"><button class="secondary" data-open>Visualizar</button><button class="secondary" data-edit>Editar</button></div></div>`;
+   el.querySelector('[data-open]').onclick=()=>url?window.open(url,'_blank','noopener') : say('Não foi possível abrir o arquivo.');
+   el.querySelector('[data-edit]').onclick=()=>openEdit(a);$('gallery').appendChild(el);
+  });
+ }
+ function openNew(){editing=null;$('artForm').reset();$('artId').value='';$('file').required=true;$('modalTitle').textContent='Adicionar arte';$('saveBtn').textContent='Salvar arte';$('modal').classList.add('show');}
+ function openEdit(a){editing=a;$('artForm').reset();$('artId').value=a.id;$('title').value=a.title;$('category').value=a.category;$('status').value=a.status;$('format').value=a.format||'1080 × 1080';$('campaign').value=a.campaign||'';$('owner').value=a.owner||'';$('artDate').value=a.art_date||'';$('description').value=a.description||'';$('file').required=false;$('modalTitle').textContent='Editar arte';$('saveBtn').textContent='Salvar alterações';$('modal').classList.add('show');}
+ function close(){ $('modal').classList.remove('show');}
+ $('newBtn').onclick=openNew;$('closeModal').onclick=close;$('cancel').onclick=close;
+ $('categoryNav').onclick=e=>{const b=e.target.closest('button[data-cat]');if(!b)return;category=b.dataset.cat;document.querySelectorAll('#categoryNav button').forEach(x=>x.classList.toggle('active',x===b));render();};
+ ['search','statusFilter','sort'].forEach(id=>$(id).addEventListener('input',render));
+ $('artForm').onsubmit=async e=>{
+  e.preventDefault();$('saveBtn').disabled=true;$('saveBtn').textContent='Salvando…';
+  try{
+   const user=(await sb.auth.getUser()).data.user;if(!user)throw Error('Sua sessão expirou. Entre novamente.');
+   let path=editing?.file_path||'', file=$('file').files[0];
+   if(file){const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');path=user.id+'/'+Date.now()+'_'+safe;const {error}=await sb.storage.from(bucket).upload(path,file,{upsert:false,contentType:file.type||'application/octet-stream'});if(error)throw error;}
+   const payload={title:$('title').value.trim(),category:$('category').value,status:$('status').value,format:$('format').value,campaign:$('campaign').value.trim(),owner:$('owner').value.trim(),art_date:$('artDate').value||null,description:$('description').value.trim(),file_path:path,file_name:file?.name||editing?.file_name||'',created_by:editing?.created_by||user.id,updated_at:new Date().toISOString()};
+   let result=editing?await sb.from('art_assets').update(payload).eq('id',editing.id):await sb.from('art_assets').insert(payload);
+   if(result.error)throw result.error;close();await load();
+  }catch(err){alert('Erro ao salvar: '+err.message);}
+  finally{$('saveBtn').disabled=false;$('saveBtn').textContent=editing?'Salvar alterações':'Salvar arte';}
+ };
+ init();
+})();
+</script>
+</body></html>

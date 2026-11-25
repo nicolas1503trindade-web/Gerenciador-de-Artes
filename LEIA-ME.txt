@@ -1,0 +1,22 @@
+GERENCIADOR DE ARTES — OMAR CONTADORES
+
+1. Extraia a pasta.
+2. Execute schema-artes.sql no Supabase:
+   Dashboard > SQL Editor > New query > cole o conteúdo > Run.
+3. O arquivo supabase-config.js já usa a URL e a chave pública fornecidas para o Postflow.
+4. Publique os arquivos index.html e supabase-config.js no mesmo projeto/site do Postflow ou hospede esta pasta em um site estático.
+5. Entre com o mesmo e-mail e senha usados no Postflow.
+
+O que já está incluído:
+- Galeria de artes com miniaturas
+- Categorias, status, campanha, responsável e data
+- Busca e filtros
+- Upload privado de arquivos no Supabase Storage
+- Login com Supabase Auth
+- Atualização em tempo real para a equipe autenticada
+
+Observações:
+- Execute o SQL antes de usar a biblioteca.
+- A autenticação precisa estar habilitada e os usuários da equipe precisam ser cadastrados em Authentication > Users.
+- A chave publishable é própria para uso no navegador; nunca coloque service_role/secret key no arquivo.
+- Upload máximo configurado: 50 MB por arquivo.
